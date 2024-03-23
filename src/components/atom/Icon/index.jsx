@@ -1,4 +1,4 @@
-import { MoonIcon, SunIcon, ComputerDesktopIcon, LinkIcon, FingerPrintIcon, BoltIcon, WalletIcon, CurrencyDollarIcon, DevicePhoneMobileIcon, ClockIcon, ShieldCheckIcon, ServerStackIcon, CursorArrowRaysIcon  } from "@heroicons/react/24/outline";
+import { MoonIcon, SunIcon, ComputerDesktopIcon, LinkIcon, FingerPrintIcon, BoltIcon, WalletIcon, CurrencyDollarIcon, DevicePhoneMobileIcon, ClockIcon, ShieldCheckIcon, ServerStackIcon, CursorArrowRaysIcon, XCircleIcon  } from "@heroicons/react/24/outline";
 
 export const Moon = ({className}) => {
     return <MoonIcon className={className} />
@@ -50,4 +50,8 @@ export const Server = ({className}) => {
 
 export const Cursor = ({className}) => {
     return <CursorArrowRaysIcon className={className} />
+}
+
+export const Cancel = ({className}) => {
+    return <XCircleIcon className={className} />
 }
