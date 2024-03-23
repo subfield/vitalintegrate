@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Brolink';
+  src: url('./Brolink.woff2') format('woff2'),  /* Modern Browsers */
+       url('./Brolink.woff') format('woff'),    /* Legacy Browsers */
+    url('./Brolink.eot') format('eot'),
+    url('./Brolink.ttf') format('ttf');    
+  font-weight: normal;
+  font-style: normal;
+}
+
+.logoFont {
+    font-family: 'Brolink', sans-serif;
+}
