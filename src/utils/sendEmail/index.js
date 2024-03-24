@@ -1,4 +1,4 @@
-export const sendEmail = () => {
-    console.log('sent')
+export const sendEmail = (x) => {
+    console.log(x)
     return !!1
 }
