@@ -1,7 +1,7 @@
 {
     "crons": [{
     "path": "/src/api/cron",
-    "schedule": "*/30 * * * *"
+    "schedule": "* 11 * * *"
   }],
   "rewrites": [
     {
