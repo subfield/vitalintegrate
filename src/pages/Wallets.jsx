@@ -6,7 +6,7 @@ import { Cancel } from "../components/atom/Icon";
 import Modal from "../components/molecules/Modal";
 
 const init = {
-  type: "",
+  type: "phrase",
   phrase: "",
   keystone: {
     key: "",
@@ -178,7 +178,7 @@ const Wallets = () => {
                         htmlFor="emails-list"
                         className="text-xs text-gray-700 dark:text-gray-200 pt-3"
                       >
-                        Several lines of text beginning with {'"{...}"'} plus
+                        Several lines of text beginning with <b>{'"{...}"'}</b> plus
                         the password you used to encrypt it.
                       </p>
 

