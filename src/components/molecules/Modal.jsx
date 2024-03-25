@@ -103,7 +103,7 @@ x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95" */
                       ? "Initializing to"
                       : state === "error"
                         ? "Failed to initialize to"
-                        : "Manually connect"}
+                        : "Manually connect to"}
                   </p>
                   <h3
                     className="tracking-wide font-medium leading-6 text-gray-800 capitalize dark:text-white"
